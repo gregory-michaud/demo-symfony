@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1>test</h1>
+
+    {{ mySerie.title | raw }} <br>
+    {{ autreVar }} <br>
+    {#
+        créer un commentaire
+        sur plusieurs lignes
+    #}
+
+    {% set prenom = 'john' %}
+    {% set nom = 'Doe' %}
+
+    {{ prenom|capitalize }} - {{ nom|upper }} - {{ nom|length }}
+
+
+    {# Création d'un tableau de couleurs #}
+
+    {% set colors = ["orange", "brown", "turquoise", "blue"] %}
+
+    <div>Nombre de couleur : {{ colors|length }}</div>
+    {{ colors|join('/') }}
+    {% for color in colors %}
+        <div>{{ loop.index }}</div>
+        <div>{{ loop.last }}</div>
+        <div>{{ color }}</div>
+    {% endfor %}
+
+    {% set film = {
+        title : 'La communauté de l\'anneau',
+        year : 2001,
+        realisateur : 'Peter Jackson'
+    } %}
+
+    <h3>{{ film.realisateur }}</h3>
+
+    {% for key, value in film %}
+        <div>{{ key }} : {{ value }}</div>
+    {% endfor %}
+
+    <div>La date du jour : {{ "now"|date('d/m/Y') }}</div>
+    <div>L'année actuelle : {{ "now"|date('Y') }}</div>
+    <div>L'année suivante : {{ "+1 year"|date('Y') }}</div>
+
+{% endblock %}
+
+{% block title %}{{ parent() }} | Test{% endblock %}
