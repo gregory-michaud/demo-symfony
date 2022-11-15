@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Series!{% endblock %}</title>
+
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap" rel="stylesheet">
+
+        <link rel="icon" href="{{ asset('img/icon.png') }}">
+
+    </head>
+    <body>
+    <div class="container">
+
+        <header>
+            <h1><a href="{{ path('main_home') }}"><img src="{{ asset('img/logo.svg') }}"></a></h1>
+            {% include('inc/nav.html.twig') %}
+        </header>
+
+
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer>
+            {% include('inc/nav.html.twig') %}
+
+            <div>{{ "now"|date("Y") }} Series!<div>
+
+       </div>
+    </body>
+</html>
