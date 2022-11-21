@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,19 +30,33 @@ class SerieController extends AbstractController
     public function detail($id, SerieRepository $serieRepository): Response
     {
         $serie = $serieRepository->find($id);
+
         return $this->render('serie/detail.html.twig', [
             "serie" => $serie
         ]);
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $serie = new Serie();
+        $serieForm = $this->createForm(SerieType::class, $serie);
 
-        dump($request);
+        dump($serie);
+        $serieForm->handleRequest($request);
+        dump($serie);
+
+        if($serieForm->isSubmitted() && $serieForm->isValid()){
+            $serie->setDateCreated(new \DateTime());
+            $entityManager->persist($serie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Serie added!!!');
+            return $this->redirectToRoute('serie_detail', ['id' => $serie->getId()]);
+        }
 
         return $this->render('serie/create.html.twig', [
-
+            'serieForm' => $serieForm->createView()
         ]);
     }
 
@@ -78,5 +93,24 @@ class SerieController extends AbstractController
 
         ]);
     }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete($id, SerieRepository $serieRepository, EntityManagerInterface $entityManager): Response
+    {
+        $serie = $serieRepository->find($id);
+
+        if(!$serie){
+            throw $this->createNotFoundException('La série n\'existe pas.');
+        }
+
+        $entityManager->remove($serie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('main_home');
+    }
+
+
+
+
 
 }
